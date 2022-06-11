@@ -10,6 +10,7 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+	"time"
 )
 
 var c *cron.Cron
@@ -50,10 +51,10 @@ func Stop() {
 // Analysis 分析基金状态
 func Analysis() {
 	// 周末不分析
-	//now := time.Now()
-	//if now.Weekday() == time.Saturday || now.Weekday() == time.Sunday {
-	//	return
-	//}
+	now := time.Now()
+	if now.Weekday() == time.Saturday || now.Weekday() == time.Sunday {
+		return
+	}
 	// 当日涨跌预警
 	estimate := make([]string, 0)
 	// 周期价格预警
