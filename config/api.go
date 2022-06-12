@@ -4,14 +4,13 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"log"
-	"sync"
 )
 
 // 配置数据
 var data map[string]interface{}
 
-// 读写锁
-var mutex sync.Mutex
+// 是否有错误
+var hasError bool
 
 // Initialize 初始化
 func Initialize() bool {
@@ -45,16 +44,22 @@ func InitializeByPath(path string) bool {
 	return true
 }
 
+// HasError 是否有错误
+func HasError() bool {
+	temp := hasError
+	hasError = false
+	return temp
+}
+
 // GetString 读取字符串配置
 func GetString(key string) string {
 	defer func() {
 		err := recover()
 		if err != nil {
 			log.Printf(`配置读取失败：%v`, err)
+			hasError = true
 		}
 	}()
-	mutex.Lock()
-	defer mutex.Unlock()
 	return data[key].(string)
 }
 
@@ -64,10 +69,9 @@ func GetStringList(key string) []string {
 		err := recover()
 		if err != nil {
 			log.Printf(`配置读取失败：%v`, err)
+			hasError = true
 		}
 	}()
-	mutex.Lock()
-	defer mutex.Unlock()
 	value := data[key].([]interface{})
 	result := make([]string, len(value))
 	for i, v := range value {
