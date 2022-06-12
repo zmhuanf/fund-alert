@@ -86,6 +86,11 @@ func Analysis() {
 				log.Printf(`历史单位净值数据错误，err：%v`, err)
 				continue
 			}
+			if max7 == 0 || min7 == 0 {
+				max7 = temp
+				min7 = temp
+				continue
+			}
 			if temp > max7 {
 				max7 = temp
 			}
@@ -100,6 +105,11 @@ func Analysis() {
 			temp, err := strconv.ParseFloat(d.Data[i][1], 10)
 			if err != nil {
 				log.Printf(`历史单位净值数据错误，err：%v`, err)
+				continue
+			}
+			if max15 == 0 || min15 == 0 {
+				max15 = temp
+				min15 = temp
 				continue
 			}
 			if temp > max15 {
@@ -118,6 +128,11 @@ func Analysis() {
 				log.Printf(`历史单位净值数据错误，err：%v`, err)
 				continue
 			}
+			if max30 == 0 || min30 == 0 {
+				max30 = temp
+				min30 = temp
+				continue
+			}
 			if temp > max30 {
 				max30 = temp
 			}
@@ -128,28 +143,27 @@ func Analysis() {
 		// 整合
 		priceRow := fmt.Sprintf(`%v(%v)`, d.Name, d.Code)
 		if min7 == d.Price {
-			priceRow += "\t7日最低"
+			priceRow += "   7日最低"
 		}
 		if max7 == d.Price {
-			priceRow += "\t7日最高"
+			priceRow += "   7日最高"
 		}
 		if min15 == d.Price {
-			priceRow += "\t15日最低"
+			priceRow += "   15日最低"
 		}
 		if max15 == d.Price {
-			priceRow += "\t15日最高"
+			priceRow += "   15日最高"
 		}
 		if min30 == d.Price {
-			priceRow += "\t30日最低"
+			priceRow += "   30日最低"
 		}
 		if max30 == d.Price {
-			priceRow += "\t30日最高"
+			priceRow += "   30日最高"
 		}
 		if strings.HasSuffix(priceRow, `)`) {
 			// 没有周期价格预警，跳过
 			continue
 		}
-		priceRow += "\n"
 		price = append(price, priceRow)
 	}
 	// 发送告警邮件
