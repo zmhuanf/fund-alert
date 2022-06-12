@@ -73,7 +73,7 @@ func Analysis() {
 			log.Printf(`当日涨跌预测数据错误，err：%v`, err)
 		}
 		if floatEstimate >= 2.5 || floatEstimate <= -2.5 {
-			estimate = append(estimate, fmt.Sprintf("%v(%v)当前涨跌%.1v！\n", d.Name, d.Code, floatEstimate))
+			estimate = append(estimate, fmt.Sprintf(`%v(%v)当前涨跌%.1v！`, d.Name, d.Code, floatEstimate))
 		}
 		// 周期价格预警
 		lenData := len(d.Data)
