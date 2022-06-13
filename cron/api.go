@@ -72,8 +72,8 @@ func Analysis() {
 		if err != nil {
 			log.Printf(`当日涨跌预测数据错误，err：%v`, err)
 		}
-		if floatEstimate >= 2.5 || floatEstimate <= -2.5 {
-			estimate = append(estimate, fmt.Sprintf(`%v(%v)当前涨跌%.1v！`, d.Name, d.Code, floatEstimate))
+		if floatEstimate >= 2 || floatEstimate <= -2 {
+			estimate = append(estimate, fmt.Sprintf(`%v(%v)   %.2v%%`, d.Name, d.Code, floatEstimate))
 		}
 		// 周期价格预警
 		lenData := len(d.Data)
@@ -169,10 +169,10 @@ func Analysis() {
 	// 发送告警邮件
 	msg := ``
 	if len(estimate) != 0 {
-		msg += fmt.Sprintf("=====当日涨跌预警=====\n%v", strings.Join(estimate, "\n"))
+		msg += fmt.Sprintf("===== 当日涨跌预警 =====\n%v", strings.Join(estimate, "\n"))
 	}
 	if len(price) != 0 {
-		msg += fmt.Sprintf("=====周期价格预警=====\n%v", strings.Join(price, "\n"))
+		msg += fmt.Sprintf("===== 周期价格预警 =====\n%v", strings.Join(price, "\n"))
 	}
 	if msg == `` {
 		msg = `今日无告警！`
