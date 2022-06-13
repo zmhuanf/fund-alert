@@ -79,3 +79,15 @@ func GetStringList(key string) []string {
 	}
 	return result
 }
+
+// GetFloat64 读取小数配置
+func GetFloat64(key string) float64 {
+	defer func() {
+		err := recover()
+		if err != nil {
+			log.Printf(`配置读取失败：%v`, err)
+			hasError = true
+		}
+	}()
+	return data[key].(float64)
+}

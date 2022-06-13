@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"github.com/robfig/cron/v3"
 	"log"
+	"math"
 	"strconv"
 	"strings"
 	"sync"
@@ -72,7 +73,7 @@ func Analysis() {
 		if err != nil {
 			log.Printf(`当日涨跌预测数据错误，err：%v`, err)
 		}
-		if floatEstimate >= 2 || floatEstimate <= -2 {
+		if math.Abs(floatEstimate) > config.GetFloat64(`threshold`) {
 			estimate = append(estimate, fmt.Sprintf(`%v(%v)   %.2v%%`, d.Name, d.Code, floatEstimate))
 		}
 		// 周期价格预警
