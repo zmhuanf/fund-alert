@@ -141,6 +141,48 @@ func Analysis() {
 				min30 = temp
 			}
 		}
+		// 一百八十日预警
+		max180 := d.Price
+		min180 := d.Price
+		for i := lenData - 1; lenData-i <= 180 && i >= 0; i-- {
+			temp, err := strconv.ParseFloat(d.Data[i][1], 10)
+			if err != nil {
+				log.Printf(`历史单位净值数据错误，err：%v`, err)
+				continue
+			}
+			if max180 == 0 || min180 == 0 {
+				max180 = temp
+				min180 = temp
+				continue
+			}
+			if temp > max180 {
+				max180 = temp
+			}
+			if temp < min180 {
+				min180 = temp
+			}
+		}
+		// 三百六十日日预警
+		max360 := d.Price
+		min360 := d.Price
+		for i := lenData - 1; lenData-i <= 360 && i >= 0; i-- {
+			temp, err := strconv.ParseFloat(d.Data[i][1], 10)
+			if err != nil {
+				log.Printf(`历史单位净值数据错误，err：%v`, err)
+				continue
+			}
+			if max360 == 0 || min360 == 0 {
+				max360 = temp
+				min360 = temp
+				continue
+			}
+			if temp > max360 {
+				max360 = temp
+			}
+			if temp < min360 {
+				min360 = temp
+			}
+		}
 		// 整合
 		priceRow := fmt.Sprintf(`%v(%v)`, d.Name, d.Code)
 		if min7 == d.Price {
@@ -160,6 +202,18 @@ func Analysis() {
 		}
 		if max30 == d.Price {
 			priceRow += "   30日最高"
+		}
+		if min180 == d.Price {
+			priceRow += "   180日最低"
+		}
+		if max180 == d.Price {
+			priceRow += "   180日最高"
+		}
+		if min360 == d.Price {
+			priceRow += "   360日最低"
+		}
+		if max360 == d.Price {
+			priceRow += "   360日最高"
 		}
 		if strings.HasSuffix(priceRow, `)`) {
 			// 没有周期价格预警，跳过
