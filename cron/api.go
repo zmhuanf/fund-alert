@@ -225,6 +225,7 @@ func Analysis() {
 	msg := ``
 	if len(estimate) != 0 {
 		msg += fmt.Sprintf("===== 当日涨跌预警 =====\n%v", strings.Join(estimate, "\n"))
+		msg += "\n\n"
 	}
 	if len(price) != 0 {
 		msg += fmt.Sprintf("===== 周期价格预警 =====\n%v", strings.Join(price, "\n"))
