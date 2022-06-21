@@ -234,4 +234,5 @@ func Analysis() {
 		msg = `今日无告警！`
 	}
 	alert.SendEmail(msg)
+	alert.SendWxMessage(msg)
 }
