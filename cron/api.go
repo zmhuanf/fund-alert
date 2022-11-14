@@ -69,152 +69,24 @@ func Analysis() {
 			continue
 		}
 		// 当日涨跌预警
-		floatEstimate, err := strconv.ParseFloat(d.Estimate, 10)
-		if err != nil {
-			log.Printf(`当日涨跌预测数据错误，err：%v`, err)
-		}
-		if math.Abs(floatEstimate) > config.GetFloat64(`threshold`) {
-			estimate = append(estimate, fmt.Sprintf(`%v(%v)   %.2v%%`, d.Name, d.Code, floatEstimate))
+		if d.Estimate != `` {
+			floatEstimate, err := strconv.ParseFloat(d.Estimate, 10)
+			if err != nil {
+				log.Printf(`当日涨跌预测数据错误，err：%v`, err)
+			}
+			if math.Abs(floatEstimate) > config.GetFloat64(`threshold`) {
+				estimate = append(estimate, fmt.Sprintf(`%v(%v)   %.2v%%`, d.Name, d.Code, floatEstimate))
+			}
 		}
 		// 周期价格预警
-		lenData := len(d.Data)
-		// 七日预警
-		max7 := d.Price
-		min7 := d.Price
-		for i := lenData - 1; lenData-i <= 7 && i >= 0; i-- {
-			temp, err := strconv.ParseFloat(d.Data[i][1], 10)
-			if err != nil {
-				log.Printf(`历史单位净值数据错误，err：%v`, err)
-				continue
-			}
-			if max7 == 0 || min7 == 0 {
-				max7 = temp
-				min7 = temp
-				continue
-			}
-			if temp > max7 {
-				max7 = temp
-			}
-			if temp < min7 {
-				min7 = temp
-			}
-		}
-		// 十五日预警
-		max15 := d.Price
-		min15 := d.Price
-		for i := lenData - 1; lenData-i <= 15 && i >= 0; i-- {
-			temp, err := strconv.ParseFloat(d.Data[i][1], 10)
-			if err != nil {
-				log.Printf(`历史单位净值数据错误，err：%v`, err)
-				continue
-			}
-			if max15 == 0 || min15 == 0 {
-				max15 = temp
-				min15 = temp
-				continue
-			}
-			if temp > max15 {
-				max15 = temp
-			}
-			if temp < min15 {
-				min15 = temp
-			}
-		}
-		// 三十日预警
-		max30 := d.Price
-		min30 := d.Price
-		for i := lenData - 1; lenData-i <= 30 && i >= 0; i-- {
-			temp, err := strconv.ParseFloat(d.Data[i][1], 10)
-			if err != nil {
-				log.Printf(`历史单位净值数据错误，err：%v`, err)
-				continue
-			}
-			if max30 == 0 || min30 == 0 {
-				max30 = temp
-				min30 = temp
-				continue
-			}
-			if temp > max30 {
-				max30 = temp
-			}
-			if temp < min30 {
-				min30 = temp
-			}
-		}
-		// 一百八十日预警
-		max180 := d.Price
-		min180 := d.Price
-		for i := lenData - 1; lenData-i <= 180 && i >= 0; i-- {
-			temp, err := strconv.ParseFloat(d.Data[i][1], 10)
-			if err != nil {
-				log.Printf(`历史单位净值数据错误，err：%v`, err)
-				continue
-			}
-			if max180 == 0 || min180 == 0 {
-				max180 = temp
-				min180 = temp
-				continue
-			}
-			if temp > max180 {
-				max180 = temp
-			}
-			if temp < min180 {
-				min180 = temp
-			}
-		}
-		// 三百六十日日预警
-		max360 := d.Price
-		min360 := d.Price
-		for i := lenData - 1; lenData-i <= 360 && i >= 0; i-- {
-			temp, err := strconv.ParseFloat(d.Data[i][1], 10)
-			if err != nil {
-				log.Printf(`历史单位净值数据错误，err：%v`, err)
-				continue
-			}
-			if max360 == 0 || min360 == 0 {
-				max360 = temp
-				min360 = temp
-				continue
-			}
-			if temp > max360 {
-				max360 = temp
-			}
-			if temp < min360 {
-				min360 = temp
-			}
-		}
-		// 整合
 		priceRow := fmt.Sprintf(`%v(%v)`, d.Name, d.Code)
-		if min7 == d.Price {
-			priceRow += "   7日最低"
-		}
-		if max7 == d.Price {
-			priceRow += "   7日最高"
-		}
-		if min15 == d.Price {
-			priceRow += "   15日最低"
-		}
-		if max15 == d.Price {
-			priceRow += "   15日最高"
-		}
-		if min30 == d.Price {
-			priceRow += "   30日最低"
-		}
-		if max30 == d.Price {
-			priceRow += "   30日最高"
-		}
-		if min180 == d.Price {
-			priceRow += "   180日最低"
-		}
-		if max180 == d.Price {
-			priceRow += "   180日最高"
-		}
-		if min360 == d.Price {
-			priceRow += "   360日最低"
-		}
-		if max360 == d.Price {
-			priceRow += "   360日最高"
-		}
+		priceRow += getTag(7, d)
+		priceRow += getTag(15, d)
+		priceRow += getTag(30, d)
+		priceRow += getTag(60, d)
+		priceRow += getTag(120, d)
+		priceRow += getTag(240, d)
+		priceRow += getTag(360, d)
 		if strings.HasSuffix(priceRow, `)`) {
 			// 没有周期价格预警，跳过
 			continue
