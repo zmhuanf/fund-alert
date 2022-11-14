@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"log"
+	"os"
 )
 
 // 配置数据
@@ -15,7 +16,7 @@ var hasError bool
 // Initialize 初始化
 func Initialize() bool {
 	data = make(map[string]interface{})
-	file, err := ioutil.ReadFile(`config.json`)
+	file, err := os.ReadFile(`config.json`)
 	if err != nil {
 		log.Printf(`配置文件读取错误，err：%v`, err)
 		return false
@@ -31,7 +32,7 @@ func Initialize() bool {
 // InitializeByPath 带路径的初始化
 func InitializeByPath(path string) bool {
 	data = make(map[string]interface{})
-	file, err := ioutil.ReadFile(path)
+	file, err := os.ReadFile(path)
 	if err != nil {
 		log.Printf(`配置文件读取错误，err：%v`, err)
 		return false
