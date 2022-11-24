@@ -12,9 +12,13 @@ import (
 
 // SendEmail 发送邮件
 func SendEmail(msg string) bool {
+	to := config.GetStringList(`email_to`)
+	if config.HasError() || len(to) == 0 {
+		return false
+	}
 	m := gomail.NewMessage()
 	m.SetHeader(`From`, config.GetString(`email_user`))
-	m.SetHeader(`To`, config.GetStringList(`email_to`)...)
+	m.SetHeader(`To`, to...)
 	m.SetHeader(`Subject`, `基金预警`)
 	m.SetBody(`text/plain`, msg)
 	d := gomail.NewDialer(`smtp.163.com`, 25, config.GetString(`email_user`), config.GetString(`email_password`))
