@@ -70,7 +70,7 @@ func Analysis() {
 		}
 		// 当日涨跌预警
 		if d.Estimate != `` {
-			floatEstimate, err := strconv.ParseFloat(d.Estimate, 10)
+			floatEstimate, err := strconv.ParseFloat(strings.ReplaceAll(d.Estimate, `%`, ``), 64)
 			if err != nil {
 				log.Printf(`当日涨跌预测数据错误，err：%v`, err)
 			}

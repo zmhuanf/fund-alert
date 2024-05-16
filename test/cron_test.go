@@ -9,7 +9,7 @@ import (
 
 func TestAnalysis(t *testing.T) {
 	log.SetFlags(log.LstdFlags | log.Llongfile)
-	ok := config.InitializeByPath(`C:\Users\Root\Desktop\server\FundAlert\config.json`)
+	ok := config.InitializeByPath(`../config.json`)
 	if !ok {
 		return
 	}

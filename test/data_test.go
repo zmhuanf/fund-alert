@@ -15,3 +15,11 @@ func TestGetData(t *testing.T) {
 	sd, _ := json.Marshal(d)
 	log.Printf(`%+v`, string(sd))
 }
+
+func Test2(t *testing.T) {
+	data, ok := data.GetEstimatedOriginalData(`005216`)
+	if !ok {
+		t.Error("GetOriginalData error")
+	}
+	println(string(data))
+}
