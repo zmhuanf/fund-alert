@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"time"
 )
 
 const api = `https://fund.eastmoney.com/pingzhongdata`
@@ -34,7 +35,21 @@ func GetOriginalData(code string) ([]byte, bool) {
 // GetEstimatedOriginalData 获取估算的今日原始数据
 func GetEstimatedOriginalData(code string) ([]byte, bool) {
 	url := fmt.Sprintf(`%v?showtype=getfundvalue&fundcode=%v`, estimatedApi, code)
-	resp, err := http.Get(url)
+	client := &http.Client{
+		Timeout: 10 * time.Second,
+	}
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		log.Printf(`创建请求失败，err：%v，url：%v`, err, url)
+		return nil, false
+	}
+	req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
+	req.Header.Set("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8")
+	req.Header.Set("Accept-Language", "en-US,en;q=0.5")
+	req.Header.Set("Connection", "keep-alive")
+	req.Header.Set("Upgrade-Insecure-Requests", "1")
+	req.Header.Set("Cache-Control", "max-age=0")
+	resp, err := client.Do(req)
 	if err != nil {
 		log.Printf(`http请求失败，err：%v，url：%v`, err, url)
 		return nil, false
